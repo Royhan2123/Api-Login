@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -103,12 +104,14 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth('api')->logout();
+        $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Logout Succesfully',
-            'data' => null,
-        ], 200);
+        if($removeToken) {
+            //return response JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Logout Berhasil!',  
+            ], 200);
+        }
     }
 }
